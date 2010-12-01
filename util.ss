@@ -1,7 +1,7 @@
 #!r6rs
 
 (library (util)
-         (export all-equal? all-assoc curry all max-take sexp-replace sexp-search get/make-alist-entry)
+         (export all-equal? all-assoc curry all max-take sexp-replace sexp-search get/make-alist-entry rest pair)
          (import (except (rnrs) string-hash string-ci-hash)
                  (only (ikarus) set-car! set-cdr!)
                  (_srfi :1)
