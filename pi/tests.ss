@@ -1,0 +1,31 @@
+(import (pi lazy))
+
+(define a (lazy-list 1 2 3 4))
+
+(define b (lazy-list 1 2))
+(define c (lazy-list 3 4))
+
+(define d (lazy-append b c))
+(pretty-print (lazy-equal? a b 10))
+(pretty-print (lazy-equal? a d 10))
+
+(define thunky (lambda () 'a))
+
+(define lr (lazy-repeat 5 thunky))
+(pretty-print (lazy-equal? lr (lazy-list 'a 'a 'a 'a) 10))
+(pretty-print (lazy-equal? lr (lazy-list 'a 'a 'a 'a 'a) 10))
+
+(define (plus1 x) (+ x 1))
+
+(define m (lazy-map plus1 (lazy-list 1 2 3 4 5)))
+(pretty-print (lazy-equal? m (lazy-list 'a 'a 'a 'a) 10))
+(pretty-print (lazy-equal? m (lazy-list 2 3 4 5 6) 10))
+
+(define ll (lazy-list 1 (lazy-list 2 3) 4))
+
+(pretty-print (lazy-length ll))
+
+(pretty-print (lazy-list->all-list ll))
+
+(pretty-print (lazy-list->all-list (lazy-remove (lazy-list 2 3) ll)))
+

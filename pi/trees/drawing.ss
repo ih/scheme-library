@@ -9,10 +9,6 @@
                  (church readable-scheme)
                  (_srfi :1))
 
-         (define (depth tree)
-           (if (list? tree)
-               (+ 1 (apply max (map depth tree)))
-               0))
 
          (define draw-trees
            (py-pickle-script "~/Code/scheme/lib/pi/trees/treedraw.py"))

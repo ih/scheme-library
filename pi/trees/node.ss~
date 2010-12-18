@@ -1,0 +1,31 @@
+(library (pi trees abstract)
+         (export node)
+         (import (except (rnrs) string-hash string-ci-hash)
+                 (only (ikarus) set-car! set-cdr!)
+                 (_srfi :1)
+                 (util)
+                 (pi generate-stimuli)
+                 (church readable-scheme))
+
+         (define a 'a)
+(define b 'b)
+(define c 'c)
+(define d 'd)
+(define e 'e)
+
+(define growth-noise .00)
+(define label-noise .00)
+(define labels '(a b c d e))
+
+(define (node x . subtrees)
+  (if (flip (- 1 growth-noise))
+      (delete '() (pair (noisy-label x) subtrees))
+      '()))
+
+(define (noisy-label x)
+  (if (flip (- 1 label-noise))
+      x
+      (uniform-draw labels)))
+
+
+         )
