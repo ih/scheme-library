@@ -36,7 +36,15 @@
                (let* ([left (lazy-list->all-list (lazy-lst 'first))]
                       [right (lazy-list->all-list (lazy-lst 'rest))])
                  (pair left right))))
-                      
+
+         (define (compute-depth lazy-lst)
+           (if (not (lazy-pair? lazy-lst))
+               (let ([db (pretty-print (list "first" lazy-lst))])
+                 2)
+               (let* ([left (compute-depth (lazy-lst 'first))]
+                      [right (compute-depth (lazy-lst 'rest))]
+                      [db (pretty-print (list (+ left right) (lazy-list->all-list lazy-lst)))])
+                 (+ left right))))
 
          (define (lazy-append lazy-lst1 lazy-lst2)
            (if (lazy-null? lazy-lst1)
@@ -53,8 +61,6 @@
                lazy-null
                (lazy-pair (proc (lazy-lst 'first)) (lazy-map proc (lazy-lst 'rest)))))
 
-         (define (compute-depth lazy-lst)
-           (pretty-print "define compute-depth"))
          
          (define (lazy-length lazy-lst)
            (if (null? lazy-lst)
