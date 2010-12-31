@@ -1,12 +1,17 @@
 #!r6rs
 ;;lazy functions
 (library (pi lazy)
-         (export lazy-list lazy-pair? lazy-pair lazy-equal? lazy-list->list list->lazy-list lazy-null? lazy-append lazy-null lazy-length compute-depth lazy-list->all-list lazy-remove lazy-repeat lazy-map lazy-uniform-draw)
+         (export lazy-list lazy-pair? lazy-pair lazy-equal? lazy-list->list list->lazy-list lazy-null? lazy-append lazy-null lazy-length compute-depth lazy-list->all-list lazy-remove lazy-repeat lazy-map lazy-first lazy-rest)
          (import (rnrs)
+                 (util)
                  (church readable-scheme))
          (define lazy-null '())
          (define lazy-null? null?)
          (define (lazy-pair a b) (lambda (tag) (if (eq? tag 'first) a (if (eq? tag 'rest) b 'lazy-pair))))
+         (define (lazy-first l-pair)
+           (l-pair 'first))
+         (define (lazy-rest l-pair)
+           (l-pair 'rest))
          (define (lazy-pair? a) (if (procedure? a) (eq? 'lazy-pair (a 'type?)) false))
 
          (define lazy-list (lambda args (if (pair? args) (lazy-pair (first args) (apply lazy-list (rest args))) args)))
@@ -39,11 +44,9 @@
 
          (define (compute-depth lazy-lst)
            (if (not (lazy-pair? lazy-lst))
-               (let ([db (pretty-print (list "first" lazy-lst))])
-                 2)
+               2
                (let* ([left (compute-depth (lazy-lst 'first))]
-                      [right (compute-depth (lazy-lst 'rest))]
-                      [db (pretty-print (list (+ left right) (lazy-list->all-list lazy-lst)))])
+                      [right (compute-depth (lazy-lst 'rest))])
                  (+ left right))))
 
          (define (lazy-append lazy-lst1 lazy-lst2)
@@ -78,8 +81,15 @@
                (if (lazy-all-equal? (lazy-lst 'first) item)
                    (lazy-remove item (lazy-lst 'rest))
                    (lazy-pair (lazy-lst 'first) (lazy-remove item (lazy-lst 'rest))))))
-         (define (lazy-uniform-draw lazy-lst)
-           (uniform-draw (lazy-list->all-list lazy-lst)))
+  ;;        (define (lazy-uniform-draw lazy-lst)
+  ;; (lazy-list-ref lazy-lst (random-from-range 0 (- (lazy-length lazy-lst) 1))))
+
+         (define (lazy-list-ref lazy-lst indx)
+           (if (= indx 0)
+               (if (lazy-pair? lazy-lst)
+                   (lazy-lst 'first)
+                   lazy-lst)
+               (lazy-list-ref (lazy-lst 'rest) (- indx 1))))
          
          (define (lazy-list->list a depth)
            (if (= 0 depth)

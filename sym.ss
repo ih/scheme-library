@@ -1,7 +1,7 @@
 ;; unique readable symbols. this is used to enumerate lists and to
 ;; generate readable variable names.
 (library (sym)
-         (export sym)
+         (export sym reset-symbol-indizes!)
          (import (except (rnrs) string-hash string-ci-hash)
                  (only (ikarus) set-car! set-cdr!)
                  (_srfi :1)
@@ -10,6 +10,8 @@
                  (util))
 
          (define symbol-indizes '())
+
+         (define (reset-symbol-indizes!) (set! symbol-indizes '()))
 
          (define (get-symbol-index-container tag)
            (get/make-alist-entry symbol-indizes
